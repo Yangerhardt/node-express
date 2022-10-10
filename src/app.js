@@ -2,7 +2,8 @@ import express from "express";
 /* const express = require('express') */
 import chalk from "chalk";
 import db from "./config/dbConnect.js";
-import livros from "./models/livro.js";
+import livros from "./models/Livro.js";
+import routes from "./routes/index.js"
 
 // Antes de criar o app, criamos a conexão com o banco de dados:
 db.on("error", console.log.bind(chalk.red("Erro de conexão")));
@@ -15,26 +16,7 @@ db.once("open", () => {
 const app = express();
 app.use(express.json());
 
-/* const livros = [
-  { id: 1, titulo: "O Senhor dos Anéis" },
-  { id: 2, titulo: "O Hobbit" },
-]; */
-
-// Aqui estamos descrevendo os endpoints que teremos
-
-app.get("/", (req, res) => {
-  res.status(200).send("Curso de Node");
-});
-
-app.get("/livros", (req, res) => {
-  livros.find((err, livros) => {
-    res.status(200).json(livros);
-  });
-});
-
-app.get("/produtos", (req, res) => {
-  res.status(200).json(produtos);
-});
+routes(app)
 
 app.get("/livros/:id", (req, res) => {
   let index = buscaLivro(req.params.id);
@@ -42,11 +24,6 @@ app.get("/livros/:id", (req, res) => {
 });
 
 // Aqui começam os verbos de alteração
-
-app.post("/livros", (req, res) => {
-  livros.push(req.body); // Aqui pegamos todo o corpo da requisição e cadastramos ele no nosso array de livros.
-  res.status(201).send("Livro foi cadastrado com sucesso.");
-});
 
 app.put("/livros/:id", (req, res) => {
   let index = buscaLivro(req.params.id); // Aqui pegamos o id da requisição através do endpoint. Usando o req.params conseguimos pegar o que é passado no endpoint.
